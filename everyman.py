@@ -6,12 +6,7 @@ from datetime import datetime, date, time, timedelta
 TOTAL_AWAKE_TIME = time(19,30)
 TOTAL_ASLEEP_TIME = time(4,30)
 
-def compute_times(initial=(0,0), core_rank=0, core=(3,30), nap=(0,20),
-                  awakes=[(5,30), (4,30), (4,30), (5,0)]):
-    core = timedelta(hours=core[0], minutes=core[1])
-    nap = timedelta(hours=nap[0], minutes=nap[1])
-    for i in range(4): awakes[i] = timedelta(hours=awakes[i][0], minutes=awakes[i][1])
-
+def check_times(core, nap, awakes):
     total_awake_time = datetime.combine(date.today(), time(0,0))
     for i in range(4): total_awake_time += awakes[i]
     total_awake_time = total_awake_time.time()
@@ -21,6 +16,14 @@ def compute_times(initial=(0,0), core_rank=0, core=(3,30), nap=(0,20),
     assert total_asleep_time == TOTAL_ASLEEP_TIME
 
     assert (datetime.combine(date.today(), total_awake_time) + timedelta(hours=total_asleep_time.hour, minutes=total_asleep_time.minute)).time() == time(0,0)
+
+def compute_times(initial=(0,0), core_rank=0, core=(3,30), nap=(0,20),
+                  awakes=[(5,30), (4,30), (4,30), (5,0)]):
+    core = timedelta(hours=core[0], minutes=core[1])
+    nap = timedelta(hours=nap[0], minutes=nap[1])
+    for i in range(4): awakes[i] = timedelta(hours=awakes[i][0], minutes=awakes[i][1])
+
+    check_times(core, nap, awakes)
 
     times = []
     s = e = datetime.combine(date.today(), time(*initial))
